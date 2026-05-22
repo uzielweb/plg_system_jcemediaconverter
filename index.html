@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JCE Media Converter - Transparent JCE File Browser for Joomla 6</title>
+  <meta name="description" content="A lightweight, robust, and 100% upgrade-safe system plugin for Joomla 6 that automatically and transparently converts all standard media fields into JCE mediajce fields at runtime.">
+  
+  <!-- Premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Design System & Harmonious HSL Colors */
+    :root {
+      --bg-base: #0b0f19;
+      --bg-surface: #131b2e;
+      --bg-surface-elevated: #1e293b;
+      --primary: #8b5cf6;
+      --primary-hover: #a78bfa;
+      --secondary: #6366f1;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-accent: #c084fc;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --glow-purple: rgba(139, 92, 246, 0.15);
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 40%);
+    }
+
+    /* Premium Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background-color: rgba(11, 15, 25, 0.75);
+      border-bottom: 1px solid var(--border-color);
+      transition: border-color 0.3s;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .logo span {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-badge {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-accent);
+    }
+
+    .header-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .header-links a:hover {
+      color: var(--text-main);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: var(--text-accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.98); }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 3.25rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 2.5rem;
+      font-weight: 300;
+    }
+
+    .cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.25);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 25px rgba(139, 92, 246, 0.4);
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Interactive Simulator */
+    .simulator-container {
+      max-width: 900px;
+      margin: 0 auto 5rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 50px var(--glow-purple);
+      overflow: hidden;
+    }
+
+    .simulator-header {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #eab308; }
+    .dot-green { background: #22c55e; }
+
+    .simulator-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all 0.3s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: var(--text-accent);
+    }
+
+    .simulator-body {
+      padding: 2.5rem 2rem;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .simulated-field-group {
+      width: 100%;
+      max-width: 500px;
+      text-align: left;
+    }
+
+    .simulated-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .simulated-input-group {
+      display: flex;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .simulated-input {
+      flex-grow: 1;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .simulated-input:focus {
+      border-color: var(--primary);
+    }
+
+    .simulated-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .simulated-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Simulated Previews */
+    .simulated-preview {
+      margin-top: 1.5rem;
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 16/9;
+      border: 1px dashed var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.15);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .simulated-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    /* Modals Simulation */
+    .sim-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sim-modal {
+      width: 90%;
+      max-width: 600px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      animation: modalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlide {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .sim-modal-header {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sim-modal-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .sim-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .sim-modal-close:hover {
+      color: var(--text-main);
+    }
+
+    .sim-modal-body {
+      padding: 1.5rem;
+    }
+
+    /* Media Manager Grids */
+    .joomla-media-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .jce-file-browser {
+      display: flex;
+      gap: 1rem;
+      height: 300px;
+    }
+
+    .jce-sidebar {
+      width: 150px;
+      border-right: 1px solid var(--border-color);
+      padding-right: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .jce-sidebar-item {
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .jce-sidebar-item.active {
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--text-accent);
+    }
+
+    .jce-content {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      overflow-y: auto;
+    }
+
+    .media-item {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .media-item:hover {
+      border-color: var(--primary);
+      background: rgba(139, 92, 246, 0.05);
+    }
+
+    .media-item img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .media-item-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .media-item.selected {
+      border-color: var(--primary);
+      background: rgba(139, 92, 246, 0.12);
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+    }
+
+    .media-item.selected .media-item-name {
+      color: var(--text-main);
+    }
+
+    .jce-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Features Grid */
+    .features {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.25rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: rgba(139, 92, 246, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-accent);
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+    }
+
+    .footer-logo span {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .footer-text {
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    .footer-credits {
+      font-size: 0.8rem;
+      opacity: 0.75;
+    }
+
+    .footer-credits a {
+      color: var(--text-accent);
+      text-decoration: none;
+    }
+
+    .footer-credits a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Premium Header -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo">
+        <span>JCE</span> Media Converter
+        <div class="logo-badge">v1.0.0</div>
+      </a>
+      <div class="header-links">
+        <a href="https://github.com/uzielweb/plg_system_jcemediaconverter" target="_blank">
+          <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor" style="display:inline-block;vertical-align:middle;">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="hero">
+    <div class="badge">Joomla 6 Ready</div>
+    <h1>Transparently Convert Joomla Media Fields <br>Into Premium JCE File Browsers</h1>
+    <p class="subtitle">
+      A lightweight, robust, and 100% upgrade-safe system plugin for Joomla 6. 
+      It automatically and dynamically rewrites all standard <code>type="media"</code> fields into JCE <code>type="mediajce"</code> fields at runtime, backend-wide.
+    </p>
+    
+    <div class="cta-group">
+      <a href="https://github.com/uzielweb/plg_system_jcemediaconverter/releases/download/v1.0.0/plg_system_jcemediaconverter-v1.0.0.zip" class="btn btn-primary">
+        Download v1.0.0 (Zip)
+      </a>
+      <a href="https://github.com/uzielweb/plg_system_jcemediaconverter" target="_blank" class="btn btn-secondary">
+        View Repository
+      </a>
+    </div>
+
+    <!-- Interactive Simulator -->
+    <div class="simulator-container">
+      <div class="simulator-header">
+        <div class="window-dots">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="simulator-tabs">
+          <button class="tab-btn active" id="btn-normal">Joomla Standard (Before)</button>
+          <button class="tab-btn" id="btn-fixed">JCE Converter Active (After)</button>
+        </div>
+      </div>
+      
+      <div class="simulator-body">
+        <div class="simulated-field-group">
+          <label class="simulated-label" id="field-label">Header Image (Standard Media Field)</label>
+          <div class="simulated-input-group">
+            <input type="text" class="simulated-input" id="media-input" placeholder="images/headers/sunset.jpg" readonly>
+            <button class="simulated-btn" id="select-btn">
+              Select
+            </button>
+          </div>
+          
+          <div class="simulated-preview">
+            <span id="preview-placeholder">No image selected</span>
+            <img id="preview-image" src="" alt="Preview">
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Features Section -->
+  <section class="features">
+    <h2 class="section-title">Key Advantages & Features</h2>
+    <div class="features-grid">
+      
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Real-Time XML Interception</h3>
+        <p class="feature-text">
+          Automatically hooks into the native <code>onContentPrepareForm</code> event to rewrite form XML elements in-memory before they are rendered.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💎</div>
+        <h3 class="feature-title">JCE global Upgrade</h3>
+        <p class="feature-text">
+          Converts both core and third-party media fields instantly. Say goodbye to basic media fields and hello to folder limits, resizing, and filters!
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3 class="feature-title">100% Upgrade-Safe</h3>
+        <p class="feature-text">
+          Zero modifications to physical database schemas, Core Joomla modules, or third-party layouts. Fully safe from core updates.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3 class="feature-title">Modern Architecture</h3>
+        <p class="feature-text">
+          Fully architected using native Joomla 6 service providers, modern Dependency Injection (DIC), and strictly compliant namespaces.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3 class="feature-title">Multilingual Translations</h3>
+        <p class="feature-text">
+          Natively localized for full internationalization with built-in translations for both English (en-GB) and Portuguese (pt-BR).
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔌</div>
+        <h3 class="feature-title">Zero Configuration</h3>
+        <p class="feature-text">
+          Just install, enable in Joomla's Plugin Manager, and watch all your fields instantly morph into powerful JCE browsers.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-logo">
+        <span>JCE</span> Media Converter
+      </div>
+      <p class="footer-text">
+        An open-source integration plugin distributed under the GNU General Public License v2 or later.
+      </p>
+      <p class="footer-credits">
+        Developed with pride by <a href="https://www.pontomega.com.br" target="_blank">Uziel - Ponto Mega</a>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Simulated Popup Modals -->
+  <div class="sim-modal-overlay" id="normal-modal">
+    <div class="sim-modal">
+      <div class="sim-modal-header">
+        <div class="sim-modal-title">Joomla Core Media Manager</div>
+        <button class="sim-modal-close" onclick="closeModal('normal-modal')">&times;</button>
+      </div>
+      <div class="sim-modal-body">
+        <div class="joomla-media-grid">
+          <div class="media-item" onclick="selectImage('normal-modal', 'images/banners/banner1.jpg')">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Beach">
+            <div class="media-item-name">banner1.jpg</div>
+          </div>
+          <div class="media-item" onclick="selectImage('normal-modal', 'images/covers/cover2.jpg')">
+            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=80" alt="Mountain">
+            <div class="media-item-name">cover2.jpg</div>
+          </div>
+          <div class="media-item" onclick="selectImage('normal-modal', 'images/headers/header3.jpg')">
+            <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=400&q=80" alt="Forest">
+            <div class="media-item-name">header3.jpg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sim-modal-overlay" id="jce-modal">
+    <div class="sim-modal" style="max-width: 700px;">
+      <div class="sim-modal-header">
+        <div class="sim-modal-title">JCE File Browser</div>
+        <button class="sim-modal-close" onclick="closeModal('jce-modal')">&times;</button>
+      </div>
+      <div class="sim-modal-body">
+        <div class="jce-file-browser">
+          <div class="jce-sidebar">
+            <div class="jce-sidebar-item active">📁 root</div>
+            <div class="jce-sidebar-item">📁 headers</div>
+            <div class="jce-sidebar-item">📁 banners</div>
+            <div class="jce-sidebar-item">📁 covers</div>
+          </div>
+          <div class="jce-content">
+            <div class="media-item" id="jce-item-1" onclick="selectJceItem('images/banners/beach_sunset.jpg', 'jce-item-1')">
+              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Beach">
+              <div class="media-item-name">beach_sunset.jpg</div>
+            </div>
+            <div class="media-item" id="jce-item-2" onclick="selectJceItem('images/covers/misty_mountain.jpg', 'jce-item-2')">
+              <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=80" alt="Mountain">
+              <div class="media-item-name">misty_mountain.jpg</div>
+            </div>
+            <div class="media-item" id="jce-item-3" onclick="selectJceItem('images/headers/autumn_forest.jpg', 'jce-item-3')">
+              <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=400&q=80" alt="Forest">
+              <div class="media-item-name">autumn_forest.jpg</div>
+            </div>
+            <div class="media-item" id="jce-item-4" onclick="selectJceItem('images/headers/urban_skyline.jpg', 'jce-item-4')">
+              <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=400&q=80" alt="City">
+              <div class="media-item-name">urban_skyline.jpg</div>
+            </div>
+          </div>
+        </div>
+        <div class="jce-footer">
+          <button class="simulated-btn" style="background:rgba(255,255,255,0.05); color:var(--text-main); border:1px solid var(--border-color);" onclick="closeModal('jce-modal')">Cancel</button>
+          <button class="simulated-btn" id="jce-insert-btn" disabled onclick="insertJceSelected()">Insert Selected</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simulator Interactive Logic
+    let currentMode = 'normal'; // 'normal' or 'fixed'
+    let selectedJceImage = '';
+    let selectedJceElId = '';
+
+    const btnNormal = document.getElementById('btn-normal');
+    const btnFixed = document.getElementById('btn-fixed');
+    const selectBtn = document.getElementById('select-btn');
+    const mediaInput = document.getElementById('media-input');
+    const previewPlaceholder = document.getElementById('preview-placeholder');
+    const previewImage = document.getElementById('preview-image');
+    const fieldLabel = document.getElementById('field-label');
+
+    btnNormal.addEventListener('click', () => {
+      currentMode = 'normal';
+      btnNormal.classList.add('active');
+      btnFixed.classList.remove('active');
+      fieldLabel.innerHTML = 'Header Image (Standard Media Field)';
+      resetField();
+    });
+
+    btnFixed.addEventListener('click', () => {
+      currentMode = 'fixed';
+      btnFixed.classList.add('active');
+      btnNormal.classList.remove('active');
+      fieldLabel.innerHTML = 'Header Image (<span style="color:var(--text-accent)">Converted to JCE Media</span>)';
+      resetField();
+    });
+
+    selectBtn.addEventListener('click', () => {
+      if (currentMode === 'normal') {
+        openModal('normal-modal');
+      } else {
+        openModal('jce-modal');
+      }
+    });
+
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+      if (id === 'jce-modal') {
+        // Reset selections
+        if (selectedJceElId) {
+          document.getElementById(selectedJceElId).classList.remove('selected');
+        }
+        selectedJceImage = '';
+        selectedJceElId = '';
+        document.getElementById('jce-insert-btn').disabled = true;
+      }
+    }
+
+    function selectImage(modalId, path) {
+      mediaInput.value = path;
+      closeModal(modalId);
+      
+      // Update preview based on image selection
+      let imgSrc = "";
+      if (path.includes('banner1')) imgSrc = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80";
+      else if (path.includes('cover2')) imgSrc = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=80";
+      else if (path.includes('header3')) imgSrc = "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=400&q=80";
+
+      previewPlaceholder.style.display = 'none';
+      previewImage.src = imgSrc;
+      previewImage.style.display = 'block';
+    }
+
+    function selectJceItem(path, elId) {
+      if (selectedJceElId) {
+        document.getElementById(selectedJceElId).classList.remove('selected');
+      }
+      selectedJceImage = path;
+      selectedJceElId = elId;
+      document.getElementById(elId).classList.add('selected');
+      document.getElementById('jce-insert-btn').disabled = false;
+    }
+
+    function insertJceSelected() {
+      if (!selectedJceImage) return;
+      mediaInput.value = selectedJceImage;
+      
+      let imgSrc = "";
+      if (selectedJceImage.includes('beach_sunset')) imgSrc = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80";
+      else if (selectedJceImage.includes('misty_mountain')) imgSrc = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=80";
+      else if (selectedJceImage.includes('autumn_forest')) imgSrc = "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=400&q=80";
+      else if (selectedJceImage.includes('urban_skyline')) imgSrc = "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=400&q=80";
+
+      previewPlaceholder.style.display = 'none';
+      previewImage.src = imgSrc;
+      previewImage.style.display = 'block';
+      
+      closeModal('jce-modal');
+    }
+
+    function resetField() {
+      mediaInput.value = '';
+      previewPlaceholder.style.display = 'block';
+      previewImage.src = '';
+      previewImage.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
