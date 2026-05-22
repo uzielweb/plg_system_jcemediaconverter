@@ -2,6 +2,7 @@
 
 [![Joomla! 6.0](https://img.shields.io/badge/Joomla%20%21-6.0-blue.svg?style=flat-square)](https://joomla.org)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-green.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![Demo & Documentation](https://img.shields.io/badge/Demo%20%26%20Documentation-Live-blueviolet.svg?style=flat-square)](https://uzielweb.github.io/plg_system_jcemediaconverter/)
 
 A lightweight, robust, and **100% upgrade-safe** system plugin for Joomla 6 that automatically and transparently converts all standard core and third-party `"media"` fields into JCE `"mediajce"` fields at runtime.
 
